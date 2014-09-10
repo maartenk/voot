@@ -1,0 +1,285 @@
+---
+layout: default
+title: Data model
+slug: datamodel
+lead: "The underlying VOOT data model is flexible, extensible and easy to adopt."
+---
+
+
+
+<div class="bs-docs-section">
+
+	<p>With SCIM, a user is member of a set of groups (may be empty). For each group that the user is member of, the membership is represented with the existence of an membership object. The membership object has no required properties, but a set of optional properties. </p>
+
+	<p><img class="img-responsive" src="/assets/img/voot/model.png" /></p>
+
+	<p>Groups are objects with a few required properties, and some optional. Groups are organized into group types. All groups are of one and only one specific type.</p>
+
+	<p>Each group type specifies a set of syntax and semantics for both the group and the membership objects. VOOT pre-defines a set of group types for use  in research and educational, however anyone may extend VOOT with new custom group types.</p>
+
+
+	<div class="bs-callout bs-callout-info">
+		<h4>Limiting the number of groups</h4>
+		<p>With VOOT we aim at reducing the number of groups a user is member of, to a controllable and usable list that the user can interact with. We foresee users beeing member of tens of groups rather than hundres or thousands. To allow for that without loosing neccessary information, VOOT encourage smart use of the membership object. Properties within the membership object may also be used for access control, where more fine grained and complex access decissions are needed.</p>
+	</div>
+
+
+
+	<h2 id="datatypes">Data types</h2>
+
+	<p>VOOT makes use of the <a href="https://tools.ietf.org/html/draft-ietf-scim-core-schema-09#section-2.1">SCIM Attribute Data Types</a>.</p>
+
+	<p>In addition VOOT specifies these data types:</p>
+
+
+	<dl class="dl-horizontal">
+		
+		<dt>Translatable String</dt>
+		<dd>The content may be eigther an untranslated basic string, in an undefined language. Alternatively, the content is an object with the property keys being ISO 639-1 Language Codes. The values is the translated values into that language.</dd>
+
+	</dl>
+
+
+
+
+
+	<h2 id="groups">Groups</h2>
+
+	<p>Groups may have a set of users as members, each member of the group is represented with a membership object. All properties on the group object are the same for all members, and can be cached across users. </p>
+
+
+	<h4>Required properties</h4>
+
+
+	<dl class="dl-horizontal">
+
+		<dt><code>id</code></dt>
+		<dd>A unique string identifier representing this group. This identifier shuold not be used by humans, only systems.</dd>
+
+		<dt><code>displayName</code></dt>
+		<dd>is a translatable string giving the group a human friendly name. The name is supposed to give a clear meaning for users setting up access control.</dd>
+
+	</dl>
+
+
+	<p>The simplest example of a group containing only required parameters:</p>
+
+{% highlight json %}
+{
+	"id": "8878ae43-965a-412a-87b5-38c398a76569",
+	"displayName": "Project on group APIs"
+}
+{% endhighlight %}
+
+
+
+	<h4>Optional properties</h4>
+
+
+
+	<dl class="dl-horizontal">
+
+		<dt><code>description</code></dt>
+		<dd>is a textual description of the group (optional). It may be translated as well.</dd>
+
+		<dt><code>type</code></dt>
+		<dd>a pointer to a group type (optional). Default group is <code>voot:default</code>.</dd>
+
+		<dt><code>notBefore</code></dt>
+		<dd>the group did not exist before this date.</dd>
+
+		<dt><code>notAfter</code></dt>
+		<dd>the group is deleted or not valid after this date.</dd>
+
+		<dt><code>public</code></dt>
+		<dd>is a boolean flag indicating whether the existence of this group and the basic group information is publicly available. Users may search and use groups in setting access control, even if they are not member of a group.</dd>
+
+		<dt><code>active</code></dt>
+		<dd>may be set to *false* to indicate that the group is currently inactive. It will cause the group to not show up on compact group lists.</dd>
+
+		<dt><code>sourceID</code></dt>
+		<dd>is an identifier that refer to the authorative source defining this group. This is useful when the VOOT Provider is merging information from a lot of different systems and passes this information on to the clients.</dd>
+
+	</dl>
+
+
+	<p><a href="/examples/">See examples of more complex groups</a></p>
+
+
+
+	<h2 id="memberships">Memberships</h2>
+
+
+	<p>The simplest representation of a group membership is an empty object, which tells that the user is member of the group, but does not give any more details than that:</p>
+
+{% highlight json %}
+{}
+{% endhighlight %}
+
+	<p>An optional property <code>basicRole</code> is recommended to use to indicate the most basic level of roles. For each group type, it should be described how the more complex role model within that group types are projected into the <code>basicRole</code>.</p>
+
+	<p>There are three legal values of <code>basicRole</code>:</p>
+
+<ul>
+
+	<li><code>member</code> is regular members. This is the default role if no explicit value is provided. </li>
+	<li><code>admin</code> is an abstract role of super members, having some kind of additional permissions. In example, the admin may invite or add </li>other members, moderate content in a group or anything else.
+	<li><code>owner</code> is given a special meaning in the Ad-Hoc scenario, where groups are created by a person, which then is the owner of the group.</li>
+</ul
+
+
+	<p>The following properties are optional.</p>
+
+
+	<dl class="dl-horizontal">
+
+		<dt><code>basicRole</code></dt>
+		<dd>The basic membership role of the current user (optoinal). Default value is <code>member</code>.</dd>
+
+
+		<dt><code>active</code></dt>
+		<dd>may be set to *false* to indicate that the user is a passive member of the group. <a href="#states">See group and membership states</a>.</dd>
+
+
+		<dt><code>notBefore</code></dt>
+		<dd>the group did not exist before this date.</dd>
+
+		<dt><code>notAfter</code></dt>
+		<dd>the group is deleted or not valid after this date.</dd>
+
+		<dt><code>may</code></dt>
+		<dd>An object of permissions that a user may or may not have related to the group. In example a user may be allowed to edit, manage, invite or delete a group.</dd>
+
+		<dt><code>userId</code></dt>
+		<dd>If the membership object is used stand alone, and there is no implicit relation to a given user, the user may be referred to by using this property.</dd>
+
+		<dt><code>groupID</code></dt>
+		<dd>If the membership object is used stand alone, and there is no implicit relation to a given group, the group may be referred to by using this property.</dd>
+
+	</dl>
+
+
+	<p>Specific group types may define additional properties on the membership object.</p>
+
+
+
+<p>An example of a membership may look like this:</p>
+
+{% highlight json %}
+{
+	"basic": "admin",
+	"displayName": {
+		"en": "Teacher",
+		"nb": "Lærer"
+	},
+	"course_role": 	"teacher",
+	"notBefore": 	"2014-01-01T12:00:00Z",
+	"notAfter": 	"2014-08-01T12:00:00Z",
+	"roleActive": 	true,
+	"userId": "andreas@uix.no",
+	"groupId": "courses:uix:m201"
+}
+{% endhighlight %}
+
+
+
+
+	<h2 id="states">Active and inactive groups and memberships</h2>
+
+
+	<p>In order for access control to allow for users accessing old content, information about group relations that are not active any longer is supported. VOOT supports some features to represent such relations, without cluttering the interface when listing groups for users to manage access control for.</p>
+
+	<p>When listing currently active groups of a current user, we include groups that are active with membership that is active, where neither the group or membership is expired (with the notBefore or notAfter properties).</p>
+
+	<p></p>
+
+
+
+
+
+	<h2 id="grouptypes">Group types</h2>
+
+
+
+
+		<p>Group types defines commonalities between types of groups. The group type resource type will represent the type itself, mapping group type identifiers to display names and schemas.</p>
+
+
+		{% highlight json %}
+		{
+			"id": "voot:groupTypes:edu:courses",
+			"displayName": {
+				"en": "Course",
+				"nb": "Fag"
+			},
+			"sourceID": "voot:sources:uninett:fs",
+			"groupSchemas": 	[
+				"voot:groupschemaX"
+			],
+			"roleSchemas": 	[
+				"voot:roleschemaX"
+			]
+		}
+		{% endhighlight %}
+
+
+
+	<h3 id="gt_org">Organization</h3>
+	<h3 id="gt_orgunit">Organizational Unit</h3>
+
+	<h3 id="gt_study">Study</h3>
+	<h3 id="gt_cohort">Cohort</h3>
+	<h3 id="gt_course">Course</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
+* [[Specifications2]] some old schemas, need to be find a suitable place for these..
+
+
+<h2>Normative References</h2>
+
+
+* [SCIM 2.0 Core Schema](http://tools.ietf.org/html/draft-ietf-scim-core-schema)
+* [SCIM 2.0 REST API](http://tools.ietf.org/html/draft-ietf-scim-api)
+* [RFC2119][] -  Key words for use in RFCs to Indicate Requirement Levels
+* [OAuth 2.0][]
+* [OAuth 2.0 Bearer Token][]
+
+[RFC2119]: https://www.ietf.org/rfc/rfc2119.txt
+[OAuth 2.0]: http://oauth.net/2/
+[OAuth 2.0 Bearer Token]: http://tools.ietf.org/html/draft-ietf-oauth-saml2-bearer-08
+
+
+<h2>Non-Normative References</h2>
+
+
+* [OpenID Connect][]
+* [SAML][]
+* [eduPerson][]
+
+
+
+[OpenID Connect]: http://openid.net/connect/
+[SAML]: http://saml.xml.org
+[eduPerson]: https://www.internet2.edu/products-services/trust-identity-middleware/eduperson-eduorg/
+-->
+
+
+
+</div>

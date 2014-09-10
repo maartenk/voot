@@ -1,0 +1,52 @@
+
+<header class="navbar navbar-default navbar-static-top bs-docs-nav" id="top" role="banner">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+
+			<a class="navbar-brand" href="/"><img src="/assets/img/geant-logo.png" alt="Geant logo" type="image/png"></a>
+
+
+
+
+		</div>
+
+		<div class="navbar-department">
+			<a href="/"><div class="department">VOOT</div></a>
+		</div>
+
+		<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+			<ul class="nav navbar-nav">
+
+				<li{% if page.slug == "datamodel" %} class="active"{% endif %}>
+					<a target="" href="/datamodel/">Data model</a>
+				</li>
+
+				<li{% if page.slug == "protocol" %} class="active"{% endif %}>
+					<a target="" href="/protocol/">Protocol</a>
+				</li>
+
+				<li{% if page.slug == "examples" %} class="active"{% endif %}>
+					<a target="" href="/examples/">Examples</a>
+				</li>
+
+				<li{% if page.slug == "usecases" %} class="active"{% endif %}>
+					<a target="" href="/usecases/">Use cases</a>
+				</li>
+
+				<li{% if page.slug == "stories" %} class="active"{% endif %}>
+					<a target="" href="/stories/">Deployments</a>
+				</li>
+
+			</ul>
+
+			<ul class="nav navbar-nav navbar-right" style="">
+				<li><a href="https://github.com/andreassolberg/voot/issues">Community</a></li>
+				<!-- <li><a href="{{ site.blog }}">Blog</a></li> -->
+				<li style="width: 3em"><a href="">&nbsp;</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>

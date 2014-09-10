@@ -1,0 +1,48 @@
+---
+layout: default
+title: Protocol
+slug: protocol
+lead: "Dybamic."
+---
+
+<p>The VOOT API provides a few new REST API endpoints.</p>
+<h3>Information about me</h3>
+<div class="codehilite"><pre><span class="p">{</span><span class="n">BASE</span><span class="p">}</span><span class="o">/</span><span class="n">me</span>
+</pre></div>
+
+
+<p>This is an alias to the <code>{BASE}/Users/{USERID}</code>, and behaves the same way.</p>
+<h3>The groups I am member of</h3>
+<div class="codehilite"><pre><span class="p">{</span><span class="n">BASE</span><span class="p">}</span><span class="o">/</span><span class="n">me</span><span class="o">/</span><span class="n">groups</span>
+</pre></div>
+
+
+<p>This endpoint is a list endpoint that suppors some custom filtering parameters.</p>
+<p>By default, this endpoint list all <em>regular group memberships</em> (as defined above) for the current user.</p>
+<p>The return results is a list of Group resources, where the Role associating the current user to it, is embedded in the <code>role</code> property.</p>
+<p>By appending the query string parameter <code>showAll=true</code> to the request, the provider will list all groups that the current user is associated with, also expired and inactive groups and roles.</p>
+<h3>Obtain role resource for a given user and group</h3>
+<div class="codehilite"><pre><span class="p">{</span><span class="n">BASE</span><span class="p">}</span><span class="o">/</span><span class="n">Roles</span><span class="o">/</span><span class="p">{</span><span class="n">GROUPID</span><span class="p">}</span><span class="o">/</span><span class="p">{</span><span class="n">USERID</span><span class="p">}</span>
+</pre></div>
+
+
+<p>This returns a single role resource for a given user, or <code>not found</code> if there is no membership role.</p>
+<p>This request will not return the vootUser and vootGroup embtteded resources properties, because they are already known by the nature of the request.</p>
+<h3>Obtaining a list of members of a group</h3>
+<div class="codehilite"><pre><span class="p">{</span><span class="n">BASE</span><span class="p">}</span><span class="o">/</span><span class="n">Groups</span><span class="o">/</span><span class="p">{</span><span class="n">GROUPID</span><span class="p">}</span><span class="o">/</span><span class="n">members</span>
+</pre></div>
+
+
+<p>List all users that are regular members of the group.</p>
+<p>By appending the query string parameter <code>showAll=true</code> to the request, the provider will list all users that is associated with the group, also expired and inactive roles.</p>
+<p>For all user resources returned, they will be populated with the <code>vootRole</code> property, embedding a Role resource.</p>
+<h3>Querying for public groups</h3>
+<div class="codehilite"><pre><span class="p">{</span><span class="n">BASE</span><span class="p">}</span><span class="o">/</span><span class="n">Groups</span><span class="o">?</span><span class="n">search</span><span class="o">=</span><span class="p">{</span><span class="n">SEARCH</span><span class="o">-</span><span class="n">TERM</span><span class="p">}</span>
+</pre></div>
+
+
+<p>This is a query / list endpoint that lists groups that matches a specific search term. The <code>search</code> query string parameter is including the exact text the user types in the search field, and it is up to the provider how to interpret this and decide which resources to return.</p>
+<p>The available set of groups to search from is all groups with a <code>"public": true</code> property that is publicly searchable, in addition to groups the user is already a member of, even if not public.</p>
+<p>The provider may search through id, title and description of groups and even other properties.</p>
+<p>List order is up to the provider, but it is reccomended to search by relevance depending on the seach match.</p>
+<p>The list of group resources returned will not contain any <code>role</code> property.</p>
