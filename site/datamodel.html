@@ -95,10 +95,13 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 		<dd>is a boolean flag indicating whether the existence of this group and the basic group information is publicly available. Users may search and use groups in setting access control, even if they are not member of a group.</dd>
 
 		<dt><code>active</code></dt>
-		<dd>may be set to *false* to indicate that the group is currently inactive. It will cause the group to not show up on compact group lists.</dd>
+		<dd>may be set to <code>false</code> to indicate that the group is currently inactive. It will cause the group to not show up on compact group lists.</dd>
 
 		<dt><code>sourceID</code></dt>
 		<dd>is an identifier that refer to the authorative source defining this group. This is useful when the VOOT Provider is merging information from a lot of different systems and passes this information on to the clients.</dd>
+
+		<dt><code>membership</code></dt>
+		<dd>if used in the context of a user's membership to this group, the property may contain the embedded membership object. See below for more details about the membership object.</dd>
 
 	</dl>
 
@@ -120,12 +123,12 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 
 	<p>There are three legal values of <code>basicRole</code>:</p>
 
-<ul>
+	<ul>
 
-	<li><code>member</code> is regular members. This is the default role if no explicit value is provided. </li>
-	<li><code>admin</code> is an abstract role of super members, having some kind of additional permissions. In example, the admin may invite or add </li>other members, moderate content in a group or anything else.
-	<li><code>owner</code> is given a special meaning in the Ad-Hoc scenario, where groups are created by a person, which then is the owner of the group.</li>
-</ul
+		<li><code>member</code> is regular members. This is the default role if no explicit value is provided. </li>
+		<li><code>admin</code> is an abstract role of super members, having some kind of additional permissions. In example, the admin may invite or add </li>other members, moderate content in a group or anything else.
+		<li><code>owner</code> is given a special meaning in the Ad-Hoc scenario, where groups are created by a person, which then is the owner of the group.</li>
+	</ul>
 
 
 	<p>The following properties are optional.</p>
@@ -138,7 +141,7 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 
 
 		<dt><code>active</code></dt>
-		<dd>may be set to *false* to indicate that the user is a passive member of the group. <a href="#states">See group and membership states</a>.</dd>
+		<dd>may be set to <code>false</code> to indicate that the user is a passive member of the group. <a href="#states">See group and membership states</a>.</dd>
 
 
 		<dt><code>notBefore</code></dt>
@@ -175,7 +178,7 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 	"course_role": 	"teacher",
 	"notBefore": 	"2014-01-01T12:00:00Z",
 	"notAfter": 	"2014-08-01T12:00:00Z",
-	"roleActive": 	true,
+	"active": 	true,
 	"userId": "andreas@uix.no",
 	"groupId": "courses:uix:m201"
 }
