@@ -17,10 +17,25 @@ module.exports = function(grunt) {
 			}
 		},
 
+		// bower: {
+		// 	install: {
+		// 		options: {
+		// 			targetDir: './site',
+		// 			layout: function(type, component, source) { return source; }, 
+		// 			install: true,
+		// 			verbose: false,
+		// 			cleanTargetDir: false,
+		// 			cleanBowerDir: true,
+		// 			bowerOptions: {}
+		// 		}
+		// 	}
+		// },
+
+
 		jshint: {
 			files: ['Gruntfile.js', 
 				// 'site/assets/js/src/*.js'
-				],
+			],
 			options: {
 				// options here to override JSHint defaults
 				globals: {
@@ -56,12 +71,9 @@ module.exports = function(grunt) {
 
 	});
 
-	// grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	// grunt.loadNpmTasks('grunt-contrib-qunit');
-	// grunt.loadNpmTasks('grunt-contrib-watch');
-	// grunt.loadNpmTasks('grunt-contrib-concat');
 
+	grunt.loadNpmTasks('grunt-contrib-jshint');	
+	// grunt.loadNpmTasks('grunt-bower-task');
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-jekyll');
 
