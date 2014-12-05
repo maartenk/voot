@@ -13,67 +13,67 @@ lead: "Example of VOOT in real life use cases."
  
 
 
-<h1>VOOT Use Cases</h1>
+  <h1>VOOT Use Cases</h1>
 
-VOOT is targeting inter-federation use cases, where users from providers in different federations share resources (services). The solutions focuses on the possibility of restricting group consumers to not be able to lookup data for users that are not present. The solutions also does not include shared user identifiers as a pre-requisite.
-
-
-
-<h2>Use case: Access control</h2>
-
-<p>User A wants to protect a resource at a Service Provider, and decides to setup a access control list.</p>
-
-<p>User chooses to associate an access rule with a remote group; and first 'hooks up' with that remote group. As this is the first time the user connects to this remote group provider (from this service provider), an OAuth flow needs to happen.
-</p>
-
-<ul>
-  <li>1. OAuth bootstrap</li>
-  <li>2. User authenticates to remote group provider</li>
-  <li>3. (optionally) user give service provider permission to access group information.</li>
-  <li>4. Remote group provider issues an access token, and associates this with the current user.</li>
-  <li>5. Service provider got the access token, and associates this with the current user (and remote provider).</li>
-</ul>
-
-<p>Then the service provider do an OAuth signed request `isMemberOf()` that returns the list of groups that the current user is member of.</p>
-
-<p>The user selects one of the groups, and the service provider request the members of that group with `getGroupMembers()` which returns a list of names and email addresses, that is shown in the user interface.
-</p>
-<p>The user decides to give access to the resource to all members of that group. The service provider then stores something like:</p>
-
-<p>* Grant access to resource X for members of groupid=`XYZ-123456` from provider=`https://groups.renater.fr/`</p>
-
-<p>When User B wants to access the resource, and User B is already member of the relevant group; the following will happen:</p>
-
-<ul>
-<li>1. Service Provider looks up the access control list for relevant external group providers.</li>
-  <li>2. Service Providers that it has no cached access tokens for user B for any of these providers.</li>
-  <li>3. Service Providers shows a splash screen to the user stating something like:</li>
-  <li>  This resource makes use of external group definitions for deciding access control. You need to hook up with one of the following group providers:</li>
-  <li>4. The user selects to hook up with a group provider.</li>
-  <li>5. The OAuth bootstrap is similar to the one described above.</li>
-</ul>
-<p>Now the Service Provider request the list of groups the user is member of from that provider using `isMemberOf()`, and checks the result with the access control list.</p>
-
-<p>If it does not yield any result, and there are more group providers, this may be repeated for each group provider, and in the end, the user will either have access, or get a final *Access Denied* message.
-</p>
+  VOOT is targeting inter-federation use cases, where users from providers in different federations share resources (services). The solutions focuses on the possibility of restricting group consumers to not be able to lookup data for users that are not present. The solutions also does not include shared user identifiers as a pre-requisite.
 
 
 
-<h2>Use Case: Invitation</h2>
+  <h2>Use case: Access control</h2>
 
-<p>A user (user A) of a web-based collaboration service would like to interact with another user (user B) through this service, where the other user (user B) does not yet have a local account. User A already manage a group including user B. The service should be able to retrieve a list of all users within the groups that user A is member of. The list of users should include display name and email address. The display names is used to present the list of users to the user, and the email address is used if User A would like to invite other users to access a resource.<p>
+  <p>User A wants to protect a resource at a Service Provider, and decides to setup a access control list.</p>
 
-<p>Associating other users with local accounts is not part of this use case. If user A invites user B; the service should include an invitation token in the invitation email, or make use of other methods to map the invited user to an account.
-</p>
+  <p>User chooses to associate an access rule with a remote group; and first 'hooks up' with that remote group. As this is the first time the user connects to this remote group provider (from this service provider), an OAuth flow needs to happen.
+  </p>
+
+  <ul>
+    <li>1. OAuth bootstrap</li>
+    <li>2. User authenticates to remote group provider</li>
+    <li>3. (optionally) user give service provider permission to access group information.</li>
+    <li>4. Remote group provider issues an access token, and associates this with the current user.</li>
+    <li>5. Service provider got the access token, and associates this with the current user (and remote provider).</li>
+  </ul>
+
+  <p>Then the service provider do an OAuth signed request `isMemberOf()` that returns the list of groups that the current user is member of.</p>
+
+  <p>The user selects one of the groups, and the service provider request the members of that group with `getGroupMembers()` which returns a list of names and email addresses, that is shown in the user interface.
+  </p>
+  <p>The user decides to give access to the resource to all members of that group. The service provider then stores something like:</p>
+
+  <p>* Grant access to resource X for members of groupid=`XYZ-123456` from provider=`https://groups.renater.fr/`</p>
+
+  <p>When User B wants to access the resource, and User B is already member of the relevant group; the following will happen:</p>
+
+  <ul>
+  <li>1. Service Provider looks up the access control list for relevant external group providers.</li>
+    <li>2. Service Providers that it has no cached access tokens for user B for any of these providers.</li>
+    <li>3. Service Providers shows a splash screen to the user stating something like:</li>
+    <li>  This resource makes use of external group definitions for deciding access control. You need to hook up with one of the following group providers:</li>
+    <li>4. The user selects to hook up with a group provider.</li>
+    <li>5. The OAuth bootstrap is similar to the one described above.</li>
+  </ul>
+  <p>Now the Service Provider request the list of groups the user is member of from that provider using `isMemberOf()`, and checks the result with the access control list.</p>
+
+  <p>If it does not yield any result, and there are more group providers, this may be repeated for each group provider, and in the end, the user will either have access, or get a final *Access Denied* message.
+  </p>
 
 
 
-<h2>Use Case: E-mail server as a Group Consumer</h2>
+  <h2>Use Case: Invitation</h2>
 
-<p>An e-mail list server can be configured, and trusted, to retrieve (pull) back-channel a list of all members of a group, including display names and email addresses.</p>
+  <p>A user (user A) of a web-based collaboration service would like to interact with another user (user B) through this service, where the other user (user B) does not yet have a local account. User A already manage a group including user B. The service should be able to retrieve a list of all users within the groups that user A is member of. The list of users should include display name and email address. The display names is used to present the list of users to the user, and the email address is used if User A would like to invite other users to access a resource.<p>
 
-<p>The list server may be trusted to retrieve this information using two-legged OAuth; or it could make use of three legged OAuth, where the list administrator will have the access token to retrieve the list associated with his/her account.
-</p>
+  <p>Associating other users with local accounts is not part of this use case. If user A invites user B; the service should include an invitation token in the invitation email, or make use of other methods to map the invited user to an account.
+  </p>
+
+
+
+  <h2>Use Case: E-mail server as a Group Consumer</h2>
+
+  <p>An e-mail list server can be configured, and trusted, to retrieve (pull) back-channel a list of all members of a group, including display names and email addresses.</p>
+
+  <p>The list server may be trusted to retrieve this information using two-legged OAuth; or it could make use of three legged OAuth, where the list administrator will have the access token to retrieve the list associated with his/her account.
+  </p>
 
 
 
