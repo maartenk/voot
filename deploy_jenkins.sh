@@ -6,7 +6,7 @@ echo "Ready to reploy updated version of voot to openvoot.org"
 cf target -o system -s prod
 
 npm install
-node_modules/grunt-cli/bin/grunt deploy
+node_modules/grunt-cli/bin/grunt publish
 
 echo "Done."
 
