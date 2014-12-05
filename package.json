@@ -54,6 +54,9 @@
   "engines": {
     "node": "~0.10.1"
   },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  },
   "jspm": {
     "main": "js/bootstrap",
     "directories": {

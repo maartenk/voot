@@ -79,7 +79,9 @@ module.exports = function(grunt) {
 
 	// grunt.registerTask('test', ['jshint', 'qunit']);
 
+	
 	grunt.registerTask('default', ['jshint', 'jekyll']);
+	grunt.registerTask('travis', ['jshint', 'jekyll']);
 	grunt.registerTask('publish', ['jshint', 'jekyll', 'shell:novaPush']);
 
 };
