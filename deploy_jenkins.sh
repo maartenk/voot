@@ -1,9 +1,11 @@
-#! /bin/bash
+#! /bin/sh
 
 echo "Ready to reploy updated version of voot to openvoot.org"
 
-npm install
-grunt test
+. ~/cf-login.sh
 
-echo "Hello World!"
+npm install
+node_modules/grunt-cli/bin/grunt deploy
+
+echo "Done."
 
