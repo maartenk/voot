@@ -81,25 +81,32 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 
 		<dt><code>description</code></dt>
 		<dd>is a textual description of the group (optional). It may be translated as well.</dd>
+		<dd>Datatype: SCIM String</dd>
 
 		<dt><code>type</code></dt>
 		<dd>a pointer to a group type (optional). Default group is <code>voot:default</code>.</dd>
+		<dd>Datatype: SCIM String</dd>
 
 		<dt><code>notBefore</code></dt>
 		<dd>the group did not exist before this date.</dd>
+		<dd>Datatype: SCIM DateTime</dd>
 
 		<dt><code>notAfter</code></dt>
 		<dd>the group is deleted or not valid after this date.</dd>
+		<dd>Datatype: SCIM DateTime</dd>
 
 		<dt><code>public</code></dt>
 		<dd>is a boolean flag indicating whether the existence of this group and the basic group information is publicly available. Users may search and use groups in setting access control, even if they are not member of a group.</dd>
+		<dd>Datatype: SCIM Boolean</dd>
 
 		<dt><code>active</code></dt>
 		<dd>may be set to <code>false</code> to indicate that the group is currently inactive. It will cause the group to not show up on compact group lists.</dd>
+		<dd>Datatype: SCIM Boolean</dd>
+
 
 		<dt><code>sourceID</code></dt>
 		<dd>is an identifier that refer to the authorative source defining this group. This is useful when the VOOT Provider is merging information from a lot of different systems and passes this information on to the clients.</dd>
-
+		<dd>Datatype: SCIM String</dd>
 
 		<dt><code>membership</code></dt>
 		<dd>if used in the context of a user's membership to this group, the property may contain the embedded membership object. See below for more details about the membership object.</dd>
@@ -210,6 +217,7 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 
 		<p>Group types defines commonalities between types of groups. The group type resource type will represent the type itself, mapping group type identifiers to display names and schemas.</p>
 
+<!--
 
 		{% highlight json %}
 		{
@@ -228,7 +236,7 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 		}
 		{% endhighlight %}
 
-
+-->
 
 	<h3 id="gt_org">Organization</h3>
 	<h3 id="gt_orgunit">Organizational Unit</h3>
