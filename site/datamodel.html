@@ -55,10 +55,11 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 
 		<dt><code>id</code></dt>
 		<dd>A unique string identifier representing this group. This identifier shuold not be used by humans, only systems.</dd>
+		<dd>Datatype: SCIM String</dd>
 
 		<dt><code>displayName</code></dt>
 		<dd>is a translatable string giving the group a human friendly name. The name is supposed to give a clear meaning for users setting up access control.</dd>
-
+		<dd>Datatype: Translatable String</dd>
 	</dl>
 
 
@@ -127,9 +128,9 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 {}
 {% endhighlight %}
 
-	<p>An optional property <code>basicRole</code> is recommended to use to indicate the most basic level of roles. For each group type, it should be described how the more complex role model within that group types are projected into the <code>basicRole</code>.</p>
+	<p>An optional property <code>basic</code> is recommended to use to indicate the most basic level of roles. For each group type, it should be described how the more complex role model within that group types are projected into the <code>basic</code>.</p>
 
-	<p>There are three legal values of <code>basicRole</code>:</p>
+	<p>There are three legal values of <code>basic</code>:</p>
 
 
 	<ul>
@@ -145,29 +146,33 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 
 	<dl class="dl-horizontal">
 
-		<dt><code>basicRole</code></dt>
+		<dt><code>basic</code></dt>
 		<dd>The basic membership role of the current user (optoinal). Default value is <code>member</code>.</dd>
+		<dd>Datatype: SCIM String</dd>
 
 
 		<dt><code>active</code></dt>
-
 		<dd>may be set to <code>false</code> to indicate that the user is a passive member of the group. <a href="#states">See group and membership states</a>.</dd>
-
+		<dd>Datatype: SCIM Boolean</dd>
 
 		<dt><code>notBefore</code></dt>
 		<dd>the group did not exist before this date.</dd>
+		<dd>Datatype: SCIM DateTime</dd>
 
 		<dt><code>notAfter</code></dt>
 		<dd>the group is deleted or not valid after this date.</dd>
+		<dd>Datatype: SCIM DateTime</dd>
 
 		<dt><code>may</code></dt>
 		<dd>An object of permissions that a user may or may not have related to the group. In example a user may be allowed to edit, manage, invite or delete a group.</dd>
 
 		<dt><code>userId</code></dt>
 		<dd>If the membership object is used stand alone, and there is no implicit relation to a given user, the user may be referred to by using this property.</dd>
+		<dd>Datatype: SCIM String</dd>
 
 		<dt><code>groupID</code></dt>
 		<dd>If the membership object is used stand alone, and there is no implicit relation to a given group, the group may be referred to by using this property.</dd>
+		<dd>Datatype: SCIM String</dd>
 
 	</dl>
 
@@ -189,8 +194,8 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 	"notBefore": 	"2014-01-01T12:00:00Z",
 	"notAfter": 	"2014-08-01T12:00:00Z",
 	"active": 	true,
-	"userId": "andreas@uix.no",
-	"groupId": "courses:uix:m201"
+	"userId": "andreas@university.edu",
+	"groupId": "courses:university_edu:m201"
 }
 {% endhighlight %}
 
@@ -213,9 +218,38 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 	<h2 id="grouptypes">Group types</h2>
 
 
-
-
 		<p>Group types defines commonalities between types of groups. The group type resource type will represent the type itself, mapping group type identifiers to display names and schemas.</p>
+
+		<p>Associated with each group type, there should be a well specified set of attribute for groups and memberships.</p>
+
+
+		<h4>Required properties</h4>
+
+		<dl class="dl-horizontal">
+
+			<dt><code>id</code></dt>
+			<dd>A unique string identifier group type. If you are defining your own group types, make sure you use a local prefix.</dd>
+			<dd>Datatype: SCIM String</dd>
+
+			<dt><code>displayName</code></dt>
+			<dd>is a translatable string giving the group a human friendly name. The name is supposed to give a clear meaning for users setting up access control.</dd>
+			<dd>Datatype: Translatable String</dd>
+		</dl>
+
+
+<p>An example of a membership may look like this:</p>
+
+{% highlight json %}
+{
+	"id": "feide:courses",
+	"displayName": {
+		"en": "Course",
+		"nb": "Emne"
+	}
+}
+{% endhighlight %}
+
+
 
 <!--
 
@@ -236,7 +270,7 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 		}
 		{% endhighlight %}
 
--->
+
 
 	<h3 id="gt_org">Organization</h3>
 	<h3 id="gt_orgunit">Organizational Unit</h3>
@@ -245,7 +279,7 @@ lead: "The underlying VOOT data model is flexible, extensible and easy to adopt.
 	<h3 id="gt_cohort">Cohort</h3>
 	<h3 id="gt_course">Course</h3>
 
-
+-->
 
 
 

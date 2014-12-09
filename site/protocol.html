@@ -105,6 +105,7 @@ Authorization: Bearer 1234-asdf-5678
 	<dl>
 		<dt><code>showAll=true</code></dt>
 		<dd>The provider will list all groups that the current user is associated with, also expired and inactive groups and roles.</dd>
+
 	</dl>
 
 	<p>By appending the query string parameter <code>showAll=true</code> to the request,</p>
@@ -120,7 +121,7 @@ Authorization: Bearer 1234-asdf-5678
 		"id": "8878ae43-965a-412a-87b5-38c398a76569",
 		"displayName": "Project on group APIs",
 		"membership": {
-			"basicRole": "member"
+			"basic": "member"
 		}
 	},
 	{
@@ -132,7 +133,7 @@ Authorization: Bearer 1234-asdf-5678
 		"public": true,
 		"sourceID": "voot:sources:uninett:fs",
 		"membership": {
-			"basicRole": "member",
+			"basic": "member",
 			"affiliation": "student",
 			"may": {
 				"listMembers": true
@@ -171,7 +172,7 @@ Content-Type: application/json; charset=utf-8
 Content-Language: no
 
 {
-	"basicRole": "member",
+	"basic": "member",
 	"displayName": "Medlem"
 }
 
@@ -251,21 +252,21 @@ Authorization: Bearer 1234-asdf-5678
 	{
 		"name": "Andreas Åkre Solberg",
 		"email": "andreas.solberg@uninett.no",
-		"profilePhotoURL": "http://core.feideconnect.no/profile/"
+		"profilePhotoURL": "http://core.feideconnect.no/profile/1234-5678"
 		"membership": {
-			"basicRole": "member"
+			"basic": "member"
 		}
 	},
 	{
 		"name": "Anders Lund",
 		"membership": {
-			"basicRole": "admin"
+			"basic": "admin"
 		}
 	},
 	{
 		"name": "Olav Morken",
 		"membership": {
-			"basicRole": "member"
+			"basic": "member"
 		}
 	}
 ]
@@ -280,51 +281,42 @@ Authorization: Bearer 1234-asdf-5678
 
 
 
-	<h4>List all groups <code>/groups</code></h4>
+	<h4>List all (or query a set of) groups <code>/groups</code></h4>
 
 	<p>Requests needs to be authenticated with a token, if needed in order to access the content.</p>
 
 	<p>This endpoint is used to return information about groups that the user is not neccessarily member of. It may be used for getting information about other groups that a user may choose to grant access to content in an ACL, or it may be used for initating a request to join a group.</p>
 
-{% highlight http %}
-GET /groups/8878ae43-965a-412a-87b5-38c398a76569/members HTTP/1.1
-Host: voot-provider.example.org
-Authorization: Bearer 1234-asdf-5678
-{% endhighlight %}
+
 	
-	<p>Query string parameters:</p>
+	<p>Query string parameters (optional):</p>
 
 	<dl>
-		<dt><code>showAll=true</code></dt>
-		<dd>The provider will list all members that are associated with the group, also expired and inactive user memberships.</dd>
+		<dt><code>query={search}</code></dt>
+		<dd>The provider will list all groups that the current user is associated with, also expired and inactive groups and roles.</dd>
 	</dl>
 
 
-	<p>The response contains a list of users. If the group is not currently having any members, an empty list is returned; <code>[]</code>.</p>
+	<p>The response contains a list of groups. If no groups was found, an empty list is returned; <code>[]</code>.</p>
 
-	<p>Here is an example of a response body:</p>
+	<p>Here is an example of a response body, to a request for the search term «UNINETT»:</p>
+
+{% highlight http %}
+GET /groups?query=UNINETT HTTP/1.1
+Host: voot-provider.example.org
+Authorization: Bearer 1234-asdf-5678
+{% endhighlight %}
 
 {% highlight json %}
 [
 	{
-		"name": "Andreas Åkre Solberg",
-		"email": "andreas.solberg@uninett.no",
-		"profilePhotoURL": "http://core.feideconnect.no/profile/",
-		"membership": {
-			"basicRole": "member"
-		}
+		"id": "1234-5678", "displayName": "UNINETT Systemavdelingen"
 	},
 	{
-		"name": "Anders Lund",
-		"membership": {
-			"basicRole": "admin"
-		}
+		"id": "1234-5689", "displayName": "UNINETT Tjenesteavdelingen"
 	},
 	{
-		"name": "Olav Morken",
-		"membership": {
-			"basicRole": "member"
-		}
+		"id": "1234-5690", "displayName": "UNINETT Nettavdelingen"
 	}
 ]
 {% endhighlight %}

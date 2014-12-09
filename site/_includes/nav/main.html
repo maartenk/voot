@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="navbar-department">
-			<a href="/"><div class="department">VOOT</div></a>
+			<a href="/"><div class="department">VOOT 2.0</div></a>
 		</div>
 
 		<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
@@ -23,6 +23,12 @@
 				<li{% if page.slug == "datamodel" %} class="active"{% endif %}>
 					<a target="" href="/datamodel/">Data model</a>
 				</li>
+
+
+				<li{% if page.slug == "grouptypes" %} class="active"{% endif %}>
+					<a target="" href="/grouptypes/">Group types</a>
+				</li>
+
 
 				<li{% if page.slug == "protocol" %} class="active"{% endif %}>
 					<a target="" href="/protocol/">Protocol</a>
@@ -38,6 +44,10 @@
 
 				<li{% if page.slug == "stories" %} class="active"{% endif %}>
 					<a target="" href="/stories/">Deployments</a>
+				</li>
+
+				<li{% if page.slug == "v1" %} class="active"{% endif %}>
+					<a target="" href="/v1/">Old version</a>
 				</li>
 
 				<li{% if page.slug == "community" %} class="active"{% endif %}>
