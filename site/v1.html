@@ -8,10 +8,117 @@ slug: v1
 <div class="bs-docs-section">
 
 
-	<p>Version 1.0 of VOOT was the output of the GÉANT3 effort, and is still in use in some systems.</p>
+    <p>Version 1.0 of VOOT was the output of the GÉANT3 effort, and is still in use in some systems.</p>
 
-	<ul>
-		<li><a href="https://wiki.terena.org/display/gn3pjra3/VOOT+specifications">VOOT 1.0</a></li>
-	</ul>
+    <h2 id="introduction">Introduction</h2>
+
+    <p> VOOT 1.0 is a simple protocol for cross-domain read-only access to information
+        about users' group membership within an organization or aggregated across
+        organizations and their role in these groups. It can be seen as making a subset
+        of LDAP-like information available through a web service.
+    </p>
+
+    <p>
+        The API is loosely based on the OpenSocial specification and a first iteration during GN3-JRA3-T2 project. This
+        is just
+        for historical reasons and not all requirements of OpenSocial nor previous
+        versions of VOOT are met. One such example is that only the JSON data format
+        is supported. This specification does however aim to be backwards compatible
+        requiring little to know change to existing VOOT software.
+    </p>
+
+    <h2 id="notationalcoventions">Notational Conventions</h2>
+
+    <p>
+        The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD',
+        'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be
+        interpreted as described in [RFC 2119].
+        <!-- TODO Link RFC -->
+    </p>
+
+    <h2 id="usecases">Usecases</h2>
+
+    <p>
+        All the use cases that are valid for accessing group membership data from an
+        organization's LDAP are also valid for VOOT. For instance, requesting
+        information about users' group memberships and the members of a group. However,
+        as opposed to LDAP, VOOT is not meant to perform user authentication.
+    </p>
+
+    <p>
+        Web applications sometimes have the ability to interface with LDAP directly to
+        access information about users in the organization's directory (and
+        authenticate users), but this is notoriously hard or even impossible to get
+        working cross-domain in a secure way, except by using RADIUS, but this is
+        not supported by web browsers, so out of scope.
+    </p>
+
+    <h2 id="provider">Provider</h2>
+
+    <p>
+        This document describes the protocol used between application (client) and
+        VOOT provider. This documents specifies the VOOT API, which is a REST API.
+        The protocol is protected using an authentication mechanism described in the
+        next section.
+    </p>
+
+    <p><img class="img-responsive" src="/assets/img/voot/voot-v1-overview.png"></p>
+
+    <h2 id="authentication">Authentication</h2>
+
+    <p>
+        An application (client) has two ways to authenticate to the VOOT provider, it
+        is up to the provider to support one, or both, of those:</p>
+    <ul>
+        <li>Retrieve a list of groups the user is a member of;</li>
+        <li>Retrieve the list of people that are member of a group the user is also a
+            member of.
+        </li>
+    </ul>
+
+    <p>Technically, OAuth 2.0 is an authorization framework and not intended for
+        authentication, however, from the point of view of the VOOT provider the
+        client authenticates to the API using an access token.</p>
+
+    <h2 id="api">API</h2>
+
+    <p> The VOOT API support two calls:</p>
+    <ul>
+        <li>Retrieve a list of groups the user is a member of;</li>
+        <li>Retrieve the list of people that are member of a group the user is also a
+            member of.
+        </li>
+    </ul>
+
+    <p>
+        For the API calls one has to specify the user identifier for which the
+        information is retrieved. For API calls using OAuth 2.0 the @me placeholder
+        identifier MUST be supported which is replaced in the provider with the actual
+        user identifier that authorized the client to act on its behalf. With this
+        placeholder the client accessing information about the user does not need to
+        know the unique identifier of the user at the provider. Specifying an user
+        identifier MAY be supported by the OAuth 2.0 protected provider, however this
+        is not recommended.
+    </p>
+
+    <p>
+        For Basic Authentication an actual user identifier and group identifier MUST be
+        specified, @me is not supported here due to the lack of binding with an user
+        that authorized the client to act on its behalf. It is out of scope how the
+        client obtains the identifiers of the user, or group.
+    </p>
+
+    <p>
+        If the user <code>John</code> authorized a client to act on its behalf, with an OAuth 2.0
+        protected provider the following calls are defined, of which only the first one
+        MUST be implemented:
+    </p>
+
+    <div class="highlight">
+        <code><pre>
+            /groups/@me
+            /people/@me/students
+            </pre></code>
+    </div>
 
 </div>
