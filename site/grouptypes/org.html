@@ -1,0 +1,128 @@
+---
+layout: default
+title: Organization
+slug: org
+---
+
+
+
+<!-- Migration
+================================================== -->
+<div class="bs-docs-section">
+	
+	<p>Grop type entry:</p>
+
+{% highlight json %}
+{
+	"id": "eduperson:org",
+	"displayName": {
+		"en": "Organization",
+		"nb": "Organisasjon"
+	}
+}
+{% endhighlight %}
+
+
+	<div class="bs-callout bs-callout-danger">
+		<h4>Group types are not part of the VOOT specification.</h4>
+		<p>Still this page contains an work in progress example of how to define group types.</p>
+	</div>
+
+
+	<h2>Group properties</h2>
+
+	<p>The following properties are optional.</p>
+
+
+	<dl class="dl-horizontal">
+
+		<dt><code>eduOrgHomePageURI</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+
+		<dt><code>eduOrgIdentityAuthNPolicyURI</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduOrgLegalName</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduOrgSuperiorURI</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduOrgWhitePagesURI</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+	</dl>
+
+
+	<h2>Membership properties</h2>
+
+	<p>The following properties are optional.</p>
+
+
+	<dl class="dl-horizontal">
+
+		<dt><code>eduPersonAffiliation</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduPersonPrimaryAffiliation</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduPersonNickname</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+
+
+		<dt><code>eduPersonPrincipalName</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduPersonEntitlement</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduPersonScopedAffiliation</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+		<dt><code>eduPersonAssurance</code></dt>
+		<dd>.</dd>
+		<dd>Datatype: SCIM String</dd>
+
+	</dl>
+
+
+
+
+
+
+
+	<h2>Example groups</h2>
+
+{% highlight json %}
+{
+	"id": "3455-1233-4564-3453",
+	"displayName": "UNINETT",
+	"eduOrgLegalName": "UNINETT AS",
+	"eduOrgWhitePagesURI": "http://www.uninett.no",
+	"membership": {
+		"basic": "member",
+		"eduPersonAffiliation": ["employee"],
+		"eduPersonPrimaryAffiliation": "employee",
+		"eduPersonPrincipalName": "andreas@uninett.no",
+		"eduPersonNickname": "Andreas"
+	}
+}
+{% endhighlight %}
+
+
+
+</div>

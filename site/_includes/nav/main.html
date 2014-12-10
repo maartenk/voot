@@ -24,19 +24,45 @@
 					<a target="" href="/datamodel/">Data model</a>
 				</li>
 
-
-				<li{% if page.slug == "grouptypes" %} class="active"{% endif %}>
-					<a target="" href="/grouptypes/">Group types</a>
-				</li>
-
-
 				<li{% if page.slug == "protocol" %} class="active"{% endif %}>
 					<a target="" href="/protocol/">Protocol</a>
 				</li>
 
+<!--
+				<li{% if page.slug == "grouptypes" %} class="active"{% endif %}>
+					<a target="" href="/grouptypes/">Group types</a>
+				</li>
+-->
+				<li class="dropdown 
+				{% if page.slug == "org" %}active{% endif %}
+				{% if page.slug == "orgunit" %}active{% endif %}
+				{% if page.slug == "adhoc" %}active{% endif %}
+				">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Group types <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+
+						<li {% if page.slug == "adhoc" %} class="active"{% endif %}>
+							<a href="/grouptypes/adhoc">Ad-hoc groups</a></li>
+
+						<li {% if page.slug == "org" %} class="active"{% endif %}>
+							<a href="/grouptypes/org">Organzation</a></li>
+							
+						<li {% if page.slug == "orgunit" %} class="active"{% endif %}>
+							<a href="/grouptypes/orgunit/">OrgUnit</a></li>
+
+						<!--
+							<li class="divider"></li>
+							<li><a href="https://inspect.{{ site.uwap.domain }}/">API Inspector</a></li>
+						-->
+					</ul>
+				</li>
+
+
+				<!--
 				<li{% if page.slug == "examples" %} class="active"{% endif %}>
 					<a target="" href="/examples/">Examples</a>
 				</li>
+				-->
 
 				<li{% if page.slug == "usecases" %} class="active"{% endif %}>
 					<a target="" href="/usecases/">Use cases</a>

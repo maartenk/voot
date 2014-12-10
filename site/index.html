@@ -16,27 +16,28 @@ title: VOOT &middot; An extensible protocol for dynamic exchange of group and au
 <div class="container">
 
 
-	<div>
+	<p>VOOT defines a <a href="/datamodel/">data model</a> and a <a href="/protocol/">protocol</a> to dynamically fetch group related information to applications, web services or collaboration tools. Group information is typically used for access control and or for social services where users interact within various group contexts.</p>
 
-		<p>VOOT defines a <a href="/datamodel/">data model</a> and a <a href="/protocol/">protocol</a> to dynamically fetch group related information to applications, web services or collaboration tools. Group information is typically used for access control and or for social services where users interact within various group contexts.</p>
+	<p>VOOT is designed to fulfill the requirements from research and educational institutions, but is not limited to these. Very specific attributes to use cases within education is kept in separate dedicated schemas to increase flexibility.</p>
 
-		<p>VOOT is designed to fulfill the requirements from research and educational institutions, but is not limited to these. Very specific attributes to use cases within education is kept in separate dedicated schemas to increase flexibility.</p>
+	<p>VOOT focuses on the use case where the client does not contain any information about the user in advance, but will dynamically obtain the data needed, when needed, at the time the user logs in, or even at a later time (with a persistent OAuth token). Therefore most of the protocol requests discussed is viewed from the perspective of the current authenticated user.</p>
 
-		<p>VOOT focuses on the use case where the client does not contain any information about the user in advance, but will dynamically obtain the data needed, when needed, at the time the user logs in, or even at a later time (with a persistent OAuth token). Therefore most of the protocol requests discussed is viewed from the perspective of the current authenticated user.</p>
+	<p>VOOT expect the client to obtain basic user details about the current user by other means than VOOT/SCIM, such as <a href="http://saml.xml.org">SAML</a> or <a href="http://openid.net/connect/">OpenID Connect</a>.</p>
 
-		<p>VOOT expect the client to obtain basic user details about the current user by other means than VOOT/SCIM, such as <a href="http://saml.xml.org">SAML</a> or <a href="http://openid.net/connect/">OpenID Connect</a>.</p>
+	<p>VOOT aims at efficent transport and retrieval of data to reduce latency when used live in the user&rsquo;s client. This implies that we add support for retrieving most combination of data in a single or a few requests.</p>
 
-		<p>VOOT aims at efficent transport and retrieval of data to reduce latency when used live in the user&rsquo;s client. This implies that we add support for retrieving most combination of data in a single or a few requests.</p>
+	<p>VOOT extends <a href="http://simplecloud.info">SCIM</a>, and plays well with <a href="http://saml.xml.org">SAML</a> or <a href="http://openid.net/connect/">OpenID Connect</a>.</p>
 
-		<p>VOOT extends <a href="http://simplecloud.info">SCIM</a>, and plays well with <a href="http://saml.xml.org">SAML</a> or <a href="http://openid.net/connect/">OpenID Connect</a>.</p>
 
-	<div class="bs-callout bs-callout-success">
+
+	<div class="bs-callout bs-callout-info">
 		<h4>Current status.</h4>
+
 		<p>VOOT is a community specification developed through the GÉANT3+ programme, by the research and educational community.</p>
+		<p>We've reached a milestone, where we want feedback from the NREN community, and get ready to start implementations.</p>
+		<p>We may adjust the wording and add details in the specification text in this phase.</p>
 	</div>
 
-
-	</div>
 
 	<div class="bs-callout bs-callout-warning">
 		<h4>Previous version.</h4>

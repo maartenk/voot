@@ -12,14 +12,14 @@ lead: "Obtaining information about groups"
 
 
 
-	<h3>Authentication</h3>
+	<h3 id="authentication">Authentication</h3>
 
 	<p>All authenticated protocol requests towards the VOOT Provider MUST be authenticated with <a href="https://tools.ietf.org/html/rfc6750">an OAuth 2.0 Bearer Token</a>.</p>
 
 	<p>This token with either represent an authenticatet client and end-user, or only an authenticated client. Some of the protocol endpoints will require a personal token.</p>
 
 
-	<h3>Localization of strings</h3>
+	<h3 id="Localization">Localization of strings</h3>
 
 	<p>When the protocol returns objects with properties of type translatable strings, the default behaviour is to negotiate which language to return the string using standard HTTP content negotation. This behaviour can be overriden by adding the query string parameter <code>translate=false</code>.</p>
 
@@ -62,7 +62,28 @@ Content-Language: no
 
 
 
-	<h3>Protocol</h3>
+
+<!--
+
+	<h3>Pagination</h3>
+
+	<p>API endpoints that lists entries, such as groups or members, should support pagination.</p>
+	<p>The query parameters<a href="https://tools.ietf.org/html/draft-ietf-scim-api-13#section-3.2.2.4"></a></p>
+
+-->
+
+
+	<h3 id="Caching">Caching and detecting modifications</h3>
+
+	<p>VOOT Providers should use cache headers as specified in the HTTP specificaiton, in order to signal that the content of the response is unmodified according to a requested timestamp or etag.</p>
+
+	<ul class="uninett-ul">
+		<li class="uninett-ul-li"><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html">Caching in HTTP RFC2616</a></li>
+	</ul>
+
+
+
+	<h3 id="Protocol">Protocol</h3>
 
 	<p>All API endpoints may contain a custom prefix. The documentation should specify the API base. In example a URL base could be: <code>https://voot-provider.example.org/voot</code>.</p>
 
@@ -80,15 +101,21 @@ Content-Language: no
 
 
 
+	<p>If the VOOT provider allows the client to inspect groups relations for a users that is not represented by the OAuth token, in example by using a token obtained by client credentials only, the following additional endpoint aliases may be used:</p>
+
+	<table class="table table-striped table-condensed">
+		<tr><th>Endpoint</th><th>Protocol description</th><th>Data returned</th></tr>
+		<tr><td><code>/user/{userid}/groups</code></td><td>The group memberships of the specified user</td><td>List of groups</td></tr>
+		<tr><td><code>/user/{userid}/groups/{groupid}</code></td><td>A specified users membership of this particular group</td><td>One membership object</td></tr>
+	</table>
+	<p>These endpoints behaves identical to the <code>/me/*</code> endpoints.</p>
 
 
 
 
 
 
-
-
-	<h4>The group memberships of the current user <code>/me/groups</code></h4>
+	<h4 id="me_groups">The group memberships of the current user <code>/me/groups</code></h4>
 
 	<p>Requests needs to be authenticated with a personal token.</p>
 
@@ -156,7 +183,7 @@ Authorization: Bearer 1234-asdf-5678
 
 
 
-	<h4>My membership of this particular group <code>/me/groups/{groupid}</code></h4>
+	<h4 id="me_groups_groupid">My membership of this particular group <code>/me/groups/{groupid}</code></h4>
 
 	<p>Requests needs to be authenticated with a personal token.</p>
 
@@ -192,7 +219,7 @@ Content-Language: no
 
 
 
-	<h4>Details about a group <code>/groups/{groupid}</code></h4>
+	<h4 id="groups_groupid">Details about a group <code>/groups/{groupid}</code></h4>
 
 	<p>Requests needs to be authenticated with a token, if needed in order to access the content.</p>
 
@@ -223,7 +250,7 @@ Content-Language: en
 
 
 
-	<h4>Members of a group <code>/groups/{groupid}/members</code></h4>
+	<h4 id="groups_groupid_members">Members of a group <code>/groups/{groupid}/members</code></h4>
 
 	<p>Requests needs to be authenticated with a token, if needed in order to access the content.</p>
 
@@ -281,7 +308,7 @@ Authorization: Bearer 1234-asdf-5678
 
 
 
-	<h4>List all (or query a set of) groups <code>/groups</code></h4>
+	<h4 id="groups_listall">List all (or query a set of) groups <code>/groups</code></h4>
 
 	<p>Requests needs to be authenticated with a token, if needed in order to access the content.</p>
 
