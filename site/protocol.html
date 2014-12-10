@@ -97,6 +97,7 @@ Content-Language: no
 		<tr><td><code>/groups/{groupid}</code></td><td>Details about a group</td><td>One group object</td></tr>
 		<tr><td><code>/groups/{groupid}/members</code></td><td>Members of a group</td><td> A list of users</td></tr>
 		<tr><td><code>/groups</code></td><td>List all groups</td><td>A list of groups</td></tr>
+		<tr><td><code>/grouptypes</code></td><td>List all group types</td><td>A list of grouptypes</td></tr>
 	</table>
 
 
@@ -348,6 +349,38 @@ Authorization: Bearer 1234-asdf-5678
 ]
 {% endhighlight %}
 
+
+	<h4 id="grouptypes_listall">List all group types <code>/grouptypes</code></h4>
+
+
+
+	<p>This endpoint is used to return information about group types.</p>
+
+	
+
+
+	<p>The response contains a list of group types. If no group types was found, an empty list is returned; <code>[]</code>.</p>
+
+	<p>Here is an example of a response body:</p>
+
+{% highlight http %}
+GET /grouptypes HTTP/1.1
+Host: voot-provider.example.org
+{% endhighlight %}
+
+{% highlight json %}
+[
+	{
+		"id": "voot:adhoc", "displayName": "Ad-hoc group"
+	},
+	{
+		"id": "eduorg:org", "displayName": "Organization"
+	},
+	{
+		"id": "feide:course", "displayName": "Course"
+	}
+]
+{% endhighlight %}
 
 
 
