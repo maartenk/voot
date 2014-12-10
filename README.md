@@ -1,5 +1,5 @@
 # VOOT
 
-<http://voot.uninett.no>
+<http://openvoot.org>
 
 This repository contains the contents of this web site.
