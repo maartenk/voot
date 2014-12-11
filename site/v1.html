@@ -62,7 +62,7 @@ slug: v1
         next section.
     </p>
 
-    <p><img class="img-responsive" src="/assets/img/voot/voot-v1-overview.png"></p>
+    <p><img class="img-responsive" src="/assets/img/voot/vootv1-overview.png"></p>
 
     <h2 id="authentication">Authentication</h2>
 
@@ -114,11 +114,119 @@ slug: v1
         MUST be implemented:
     </p>
 
-    <div class="highlight">
-        <code><pre>
-            /groups/@me
-            /people/@me/students
-            </pre></code>
-    </div>
+{% highlight html %}
+/groups/@me
+/people/@me/students
+{% endhighlight %}
+
+    <p>
+        If information about the user <code>John</code> is queried by a client using Basic
+        Authentication the following calls are defined, of which only the first one
+        MUST be implemented:
+    </p>
+
+{% highlight html %}
+/groups/john
+/people/john/students
+{% endhighlight %}
+
+    <h2 id="oauth">OAuth</h2>
+
+    <p>
+        In order to retrieve data from the VOOT service, it is required that the client
+        specifies what type of call it wants to perform. For any of the calls a
+        different scope is required. Multiple scopes can be combined:
+    </p>
+    <ul>
+        <li>Retrieving a list of groups the user is a member of, requires the scope
+            <code>http://openvoot.org/groups</code>;
+        </li>
+        <li>Retrieving the list of people that are member of a group the user is also a
+            member of, also requires the scope <code>http://openvoot.org/people</code>.
+        </li>
+    </ul>
+    <p>
+        For backwards compatibility the scope read will give access to all the
+        above, assuming there are no other server side restrictions.
+    </p>
+
+    <h2 id="retrievemembership">Retrieve Group Membership</h2>
+
+    <p>this call retrieves a list of groups the user is a member of</p>
+
+{% highlight html %}
+/groups/@me
+{% endhighlight %}
+
+    <p>or</p>
+
+{% highlight html %}
+/groups/[userId]
+{% endhighlight %}
+
+    <p>Where <code>[userId]</code> is replaced with an idenfier of the user at the provider. This
+        call MUST be supported. The response can include the following keys:</p>
+
+    <ul>
+        <li>(REQUIRED) <code>id</code>: The, to the provider, local unique identifier of the group;</li>
+        <li>(REQUIRED) <code>voot_membership_role</code>: The role the user has in this group;</li>
+        <li>(OPTIONAL) <code>title</code>: The short human readable name of the group;</li>
+        <li>(OPTIONAL) <code>description</code>: A description of the group.</li>
+    </ul>
+
+    <p>
+        The <code>id</code> field SHOULD be opaque to the client. The field <code>voot_membership_role</code>
+        can be any of these values: admin, manager or member.
+    </p>
+
+    <h2 id="retrievemembers">Retrieve Members of a Group</h2>
+
+    <p>This call retrieves a list of all members of a group the user is a member of:</p>
+
+
+{% highlight html %}
+/people/@me/[groupId]
+{% endhighlight %}
+
+    <p>or</p>
+
+{% highlight html %}
+/people/[userId]/[groupId]
+{% endhighlight %}
+
+    <p>
+        Where <code>[userId]</code> is replaced with an identifier of the user at the provider
+        and <code>[groupId]</code> replaced with a group identifier which was obtained through for
+        instance the call used to retrieve group membership for a particular user.</p>
+
+    <p>
+        This call MAY be supported. The response can include the following keys:</p>
+
+    <ul>
+        <li>(REQUIRED) <code>id</code>: The, to the provider, local unique identifier of the user;</li>
+        <li>(OPTIONAL) <code>displayName</code>: The name by which the user prefers to be addressed;</li>
+        <li>(OPTIONAL) <code>voot_membership_role</code>: The role the user has in this group;</li>
+        <li>(OPTIONAL) <code>emails</code>: The email address(es) of the user;</li>
+    </ul>
+
+    <p>
+        The <code>id</code> field SHOULD be opaque to the client. The field <code>voot_membership_role</code>
+        can be any of these values: <code>admin</code>, <code>manager</code> or <code>member</code>. The user MUST be a
+        member, but not necessary have the role <code>member</code> of the group being queried. The
+        <code>emails</code> field SHOULD contain a list of email addresses which provides the
+        type to be any of <code>work</code>, <code>home</code> or <code>other</code>. For example:
+    </p>
+
+{% highlight json %}
+{
+   "emails": [
+      {
+         "type": "work",
+         "value": "bmcatee@students.example.edu"
+      }
+   ]
+}
+{% endhighlight %}
+
 
 </div>
