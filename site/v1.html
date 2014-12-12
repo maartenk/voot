@@ -311,5 +311,99 @@ slug: v1
     <p>Below are some API examples for retrieve group membership, a list of group
         members and information about the user.</p>
 
-    
+    <h4>Retrieve Group Membership</h4>
+
+    <p>
+        This is an example of the response to the query:
+    </p>
+
+{% highlight http %}
+
+GET /groups/@me?sortBy=title HTTP/1.1
+Host: provider.example.org
+
+{% endhighlight %}
+
+    <p>The response looks like this:</p>
+
+{% highlight http %}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+	"entry": [
+		{
+			"description": "Group containing employees.",
+			"id": "employees",
+			"title": "Employees",
+			"voot_membership_role": "admin"
+		},
+		{
+			"description": "Group containing everyone at this institute.",
+			"id": "members",
+			"title": "Members",
+			"voot_membership_role": "member"
+		}
+	],
+	"itemsPerPage": 2,
+	"startIndex": "0",
+	"totalResults": 2
+}
+
+{% endhighlight %}
+
+    <h4>Retrieve Members of a Groups</h4>
+
+    <p>
+        This is an example of the response to the query:
+    </p>
+
+{% highlight http %}
+
+GET /people/@me/members?sortBy=displayName&startIndex=3&count=2 HTTP/1.1
+Host: provider.example.org
+
+{% endhighlight %}
+
+    <p>The response looks like this:</p>
+
+{% highlight http %}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+	"entry": [
+		{
+			"displayName": "Bobby Mcatee",
+			"emails": [
+				{
+					"type": "work",
+					"value": "bmcatee@students.example.edu"
+				}
+			],
+			"id": "bmcatee",
+			"voot_membership_role": "member"
+		},
+		{
+			"displayName": "Myra Wisdom",
+			"emails": [
+				{
+					"type": "home",
+					"value": "mwisdom@students.example.edu"
+				}
+			],
+			"id": "mwisdom",
+			"voot_membership_role": "member"
+		}
+	],
+	"itemsPerPage": "2",
+	"startIndex": "3",
+	"totalResults": "7"
+}
+
+{% endhighlight %}
+
+
 </div>
