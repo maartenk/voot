@@ -228,82 +228,88 @@ slug: v1
 }
 {% endhighlight %}
 
-	<h2 id="requestparameters">Request Parameters</h2>
+    <h2 id="requestparameters">Request Parameters</h2>
 
-	<p>The API calls have three OPTIONAL parameters that manipulate the result
-		obtained from the provider:</p>
+    <p>The API calls have three OPTIONAL parameters that manipulate the result
+        obtained from the provider:</p>
 
-	<ul>
-		<li><code>sortBy</code></li>
-		<li><code>startIndex</code></li>
-		<li><code>count</code></li>
-	</ul>
+    <ul>
+        <li><code>sortBy</code></li>
+        <li><code>startIndex</code></li>
+        <li><code>count</code></li>
+    </ul>
 
-	<p>
-		The <code>sortBy</code> parameter determines the key in the result that is used for sorting
-		the groups or group members. It can be any of the mentioned keys mentioned in
-		the previous section:
-	</p>
+    <p>
+        The <code>sortBy</code> parameter determines the key in the result that is used for sorting
+        the groups or group members. It can be any of the mentioned keys mentioned in
+        the previous section:
+    </p>
 
-	<ul>
-		<li><code>id</code></li>
-		<li><code>displayName</code></li>
-		<li><code>title</code></li>
-		<li><code>description</code></li>
-		<li><code>voot_membership_role</code></li>
-	</ul>
+    <ul>
+        <li><code>id</code></li>
+        <li><code>displayName</code></li>
+        <li><code>title</code></li>
+        <li><code>description</code></li>
+        <li><code>voot_membership_role</code></li>
+    </ul>
 
-	<p>
-		If the key is not available in the set being sorted, the results are not sorted
-		or sorted at the provider's discretion. It is up to the provider whether or not
-		to sort and by what key in what order if these parameters are not present.
-		If the results are to be sorted, the value SHOULD be compared as strings and
-		SHOULD be sorted case-insensitive in ascending order.
-	</p>
+    <p>
+        If the key is not available in the set being sorted, the results are not sorted
+        or sorted at the provider's discretion. It is up to the provider whether or not
+        to sort and by what key in what order if these parameters are not present.
+        If the results are to be sorted, the value SHOULD be compared as strings and
+        SHOULD be sorted case-insensitive in ascending order.
+    </p>
 
-	<p>
-		The <code>startIndex</code> parameter determines the offset as an integer >= 0 at which
-		the start for giving back results. The <code>count</code> parameter, an integer >= 0
-		indicates the number of results to be given back. The <code>startIndex</code> and count
-		parameters can be used to implement paging by returning only a subset of the
-		results. These parameters are OPTIONAL, if they are not provided or invalid the
-		provider MUST consider <code>startIndex</code> equal to 0 and <code>count</code> equal to the total
-		number of items available in the entire set for the particular query.
-	</p>
+    <p>
+        The <code>startIndex</code> parameter determines the offset as an integer >= 0 at which
+        the start for giving back results. The <code>count</code> parameter, an integer >= 0
+        indicates the number of results to be given back. The <code>startIndex</code> and count
+        parameters can be used to implement paging by returning only a subset of the
+        results. These parameters are OPTIONAL, if they are not provided or invalid the
+        provider MUST consider <code>startIndex</code> equal to 0 and <code>count</code> equal to the total
+        number of items available in the entire set for the particular query.
+    </p>
 
-	<p>The sorting, if requested, MUST be performed on the provider before applying
-		limiting the results based on the <code>startIndex</code> and <code>count</code> parameters.
-	</p>
+    <p>The sorting, if requested, MUST be performed on the provider before applying
+        limiting the results based on the <code>startIndex</code> and <code>count</code> parameters.
+    </p>
 
-	<p>For the API call, requesting user information, the <code>sortBy</code> parameter has no
-		effect. Using <code>startIndex</code> and <code>count</code> is possible, however they are of little
-		use as there always will be only one answer, assuming the user exists.
-	</p>
+    <p>For the API call, requesting user information, the <code>sortBy</code> parameter has no
+        effect. Using <code>startIndex</code> and <code>count</code> is possible, however they are of little
+        use as there always will be only one answer, assuming the user exists.
+    </p>
 
-	<h2 id="responseparameters">Response Parameters</h2>
+    <h2 id="responseparameters">Response Parameters</h2>
 
-	<p>
-		All responses mentioned above have the same JSON structure. There are always
-		four keys:
-	</p>
+    <p>
+        All responses mentioned above have the same JSON structure. There are always
+        four keys:
+    </p>
 
-	<ul>
-		<li><code>startIndex</code></li>
-		<li><code>itemsPerPage</code></li>
-		<li><code>totalResults</code></li>
-		<li><code>entry</code></li>
-	</ul>
+    <ul>
+        <li><code>startIndex</code></li>
+        <li><code>itemsPerPage</code></li>
+        <li><code>totalResults</code></li>
+        <li><code>entry</code></li>
+    </ul>
 
-	<p>
-		Where <code>startIndex</code> contains the offset from which the results are returned,
-		this is usually equals to the requested <code>startIndex</code>. The <code>itemsPerPage</code>
-		contains the actual number of results in the response set, as part of entry,
-		returned. The <code>totalResults</code> field contains the full number of elements
-		available, not depending on the <code>startIndex</code> and <code>count</code> parameters.
-	</p>
+    <p>
+        Where <code>startIndex</code> contains the offset from which the results are returned,
+        this is usually equals to the requested <code>startIndex</code>. The <code>itemsPerPage</code>
+        contains the actual number of results in the response set, as part of entry,
+        returned. The <code>totalResults</code> field contains the full number of elements
+        available, not depending on the <code>startIndex</code> and <code>count</code> parameters.
+    </p>
 
-	<p>The <code>entry</code> key contains a list of items, either groups, people or person
-		information. Below are some examples.
-	</p>
+    <p>The <code>entry</code> key contains a list of items, either groups, people or person
+        information. Below are some examples.
+    </p>
 
+    <h2 id="apiexample">API Examples</h2>
+
+    <p>Below are some API examples for retrieve group membership, a list of group
+        members and information about the user.</p>
+
+    
 </div>
