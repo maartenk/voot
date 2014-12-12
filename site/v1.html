@@ -219,12 +219,12 @@ slug: v1
 
 {% highlight json %}
 {
-   "emails": [
-      {
-         "type": "work",
-         "value": "bmcatee@students.example.edu"
-      }
-   ]
+	"emails": [
+		{
+			"type": "work",
+			"value": "bmcatee@students.example.edu"
+		}
+	]
 }
 {% endhighlight %}
 
@@ -280,7 +280,7 @@ slug: v1
 		use as there always will be only one answer, assuming the user exists.
 	</p>
 
-	<h2 id="responsparameters">Response Parameters</h2>
+	<h2 id="responseparameters">Response Parameters</h2>
 
 	<p>
 		All responses mentioned above have the same JSON structure. There are always
@@ -297,12 +297,13 @@ slug: v1
 	<p>
 		Where <code>startIndex</code> contains the offset from which the results are returned,
 		this is usually equals to the requested <code>startIndex</code>. The <code>itemsPerPage</code>
-		contains the actual number of results in the reponse set, as part of entry,
+		contains the actual number of results in the response set, as part of entry,
 		returned. The <code>totalResults</code> field contains the full number of elements
-		available, not depending on the <code>startIndex</code>e> and <code>count</code> parameters.
+		available, not depending on the <code>startIndex</code> and <code>count</code> parameters.
 	</p>
 
 	<p>The <code>entry</code> key contains a list of items, either groups, people or person
 		information. Below are some examples.
 	</p>
+
 </div>
