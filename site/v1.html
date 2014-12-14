@@ -562,5 +562,88 @@ Content-Type: application/json
         mechanism to make the values opaque as this information is typically not
         provided through the SAML assertion. </p>
 
+    <h2 id="roles">Roles</h2>
+
+    <p>
+        The roles <code>admin</code>, <code>manager</code> and <code>member</code> are not well defined. Their actual
+        semantics is based on what the application considers to be an <code>admin</code>, <code>manager</code>
+        or <code>member</code>. However, in general, the following can be said about the roles:
+    </p>
+
+    <ul>
+        <li>
+            A user with role <code>admin</code> has more rights than a user with role <code>manager</code> or
+            role <code>member</code>;
+        </li>
+        <li>
+            A user with role <code>manager</code> has more rights than a user with role <code>member</code>;
+        </li>
+    </ul>
+
+    <p>
+        For more fine grained roles the use of an entitlement based system is
+        recommended, which is out of scope of this specification.
+    </p>
+
+    <h2 id="privacy">Privacy</h2>
+
+    <p>
+        In order to maintain user privacy only the group membership API call should be
+        allowed by third party clients. The other calls are not needed to determine
+        group membership, e.g. to base application authorization on. If a user is a
+        member of a particular group certain privileges may be granted based on just
+        this fact.
+    </p>
+
+    <p>
+        Only the <code>@me</code> user identifier should be allowed as to avoid needing to obtain
+        unique user identifiers.
+    </p>
+
+    <p>
+        If one makes use of the proxy scenario where the proxy provider is trusted,
+        Basic Authentication can be used with for instance the local <code>uid</code> of the user.
+        The proxy then SHOULD take care of making this information opaque towards the
+        client and generate new identifiers for the same user for different clients.
+    </p>
+
+    <p>
+        The calls to retrieve group members are unacceptable from the point of view of
+        user privacy. Even if OAuth 2.0 is used this would leak user identifiers of
+        other people to clients without the users that are a member of this group ever
+        gave permissions for that. The impact of this can be minimized by making sure
+        only the unique, opaque user identifier of the user is mentioned in the result
+        and not other identifying information such as <code>displayName</code>. However, without
+        these additional attributes this API call will be less useful.
+    </p>
+
+    <h2 id="references">References</h2>
+
+    <ul>
+        <li id="rfc2119"><a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a> Key words for use in RFCs to
+            Indicate Requirement Levels
+        </li>
+        <li id="rfc2617"><a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a> HTTP Authentication: Basic and
+            Digest Access Authentication
+        </li>
+        <li id="rfc6749"><a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a> The OAuth 2.0 Authorization
+            Framework
+        </li>
+        <li id="rfc6750"><a href="https://tools.ietf.org/html/rfc6750">RFC 6750</a> The OAuth 2.0 Authorization
+            Framework: Bearer Token Usage
+        </li>
+    </ul>
+
+    <h2 id="contributors">Contributors</h2>
+    <ul>
+        <li>Leif Johansson</li>
+        <li>Maarten Kremers</li>
+    </ul>
+
+    <h2 id="authors">Authors / Editors</h2>
+    <ul>
+        <li>Andreas Åkre Solberg</li>
+        <li>François Kooman</li>
+    </ul>
 
 </div>
