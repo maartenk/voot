@@ -19,12 +19,12 @@ slug: v1
     </p>
 
     <p>
-        The API is loosely based on the OpenSocial specification and a first iteration during GN3-JRA3-T2 project. This
-        is just
-        for historical reasons and not all requirements of OpenSocial nor previous
-        versions of VOOT are met. One such example is that only the JSON data format
-        is supported. This specification does however aim to be backwards compatible
-        requiring little to know change to existing VOOT software.
+        The API is loosely based on the OpenSocial specification and a first iteration
+        during the GN3-JRA3-T2 project. This is just for historical reasons and
+        not all requirements of OpenSocial nor previous versions of VOOT are met.
+        One such example is that only the JSON data format is supported.
+        This specification does however aim to be backwards compatible requiring
+        little to know change to existing VOOT software.
     </p>
 
     <h2 id="notationalcoventions">Notational Conventions</h2>
@@ -68,10 +68,18 @@ slug: v1
     <p>
         An application (client) has two ways to authenticate to the VOOT provider, it
         is up to the provider to support one, or both, of those:</p>
+
     <ul>
-        <li>Retrieve a list of groups the user is a member of;</li>
-        <li>Retrieve the list of people that are member of a group the user is also a
-            member of.
+        <li>Using Basic Authentication [<a href="#rfc2617">RFC 2617</a>] if the
+            VOOT provider fully trusts the client as the client will have full
+            access to all data at the provider;
+        </li>
+        <li>OAuth 2.0 [<a href="#rfc6749">RFC 6749</a>] if there is some trust
+            between the VOOT provider and the client where it is left to
+            the user to explicitly authorize the client
+            that wants to access data from the provider. The user gives the client
+            only access to their data, and not to that
+            of other users at the VOOT provider.
         </li>
     </ul>
 
@@ -91,7 +99,7 @@ slug: v1
 
     <p>
         For the API calls one has to specify the user identifier for which the
-        information is retrieved. For API calls using OAuth 2.0 the @me placeholder
+        information is retrieved. For API calls using OAuth 2.0 the <code>@me</code> placeholder
         identifier MUST be supported which is replaced in the provider with the actual
         user identifier that authorized the client to act on its behalf. With this
         placeholder the client accessing information about the user does not need to
@@ -102,7 +110,7 @@ slug: v1
 
     <p>
         For Basic Authentication an actual user identifier and group identifier MUST be
-        specified, @me is not supported here due to the lack of binding with an user
+        specified, <code>@me</code> is not supported here due to the lack of binding with an user
         that authorized the client to act on its behalf. It is out of scope how the
         client obtains the identifiers of the user, or group.
     </p>
@@ -263,7 +271,7 @@ slug: v1
     <p>
         The <code>startIndex</code> parameter determines the offset as an integer >= 0 at which
         the start for giving back results. The <code>count</code> parameter, an integer >= 0
-        indicates the number of results to be given back. The <code>startIndex</code> and count
+        indicates the number of results to be given back. The <code>startIndex</code> and <code>count</code>
         parameters can be used to implement paging by returning only a subset of the
         results. These parameters are OPTIONAL, if they are not provided or invalid the
         provider MUST consider <code>startIndex</code> equal to 0 and <code>count</code> equal to the total
@@ -296,7 +304,7 @@ slug: v1
     <p>
         Where <code>startIndex</code> contains the offset from which the results are returned,
         this is usually equals to the requested <code>startIndex</code>. The <code>itemsPerPage</code>
-        contains the actual number of results in the response set, as part of entry,
+        contains the actual number of results in the response set, as part of <code>entry</code>,
         returned. The <code>totalResults</code> field contains the full number of elements
         available, not depending on the <code>startIndex</code> and <code>count</code> parameters.
     </p>
@@ -465,13 +473,13 @@ Content-Type: application/json
 {% endhighlight %}
 
 <ul>
-    <li>If Basic Authentication is used and @me is used an error response with
+    <li>If Basic Authentication is used and <code>@me</code> is used an error response with
     code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>.
     If a user identifier is specified instead of <code>@me</code> for providers not
     supporting the use of user identifiers the same error is returned;</li>
 
     <li>If the specified user does not exist at the provider an error response with
-    code<code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>;</li>
+    code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>;</li>
 
     <li>If any other error occurs an error response with code
     <code>500 Internal Server Error</code> is returned. The <code>error</code> field contains
@@ -494,13 +502,13 @@ Content-Type: application/json
 
 
     <ul>
-        <li>If Basic Authentication is used and @me is used an error response with
+        <li>If Basic Authentication is used and <code>@me</code> is used an error response with
             code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>.
             If a user identifier is specified instead of <code>@me</code> for providers not
             supporting the use of user identifiers the same error is returned;</li>
 
         <li>If the specified user does not exist at the provider an error response with
-            code<code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>;</li>
+            code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>;</li>
 
         <li>
             If the specified user is not a member of the group an error response with
