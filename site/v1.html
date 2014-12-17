@@ -8,10 +8,649 @@ slug: v1
 <div class="bs-docs-section">
 
 
-	<p>Version 1.0 of VOOT was the output of the GÉANT3 effort, and is still in use in some systems.</p>
+    <p>Version 1.0 of VOOT was the output of the GÉANT3 effort, and is still in use in some systems.</p>
 
-	<ul>
-		<li><a href="https://wiki.terena.org/display/gn3pjra3/VOOT+specifications">VOOT 1.0</a></li>
-	</ul>
+    <h2 id="introduction">Introduction</h2>
+
+    <p> VOOT 1.0 is a simple protocol for cross-domain read-only access to information
+        about users' group membership within an organization or aggregated across
+        organizations and their role in these groups. It can be seen as making a subset
+        of LDAP-like information available through a web service.
+    </p>
+
+    <p>
+        The API is loosely based on the OpenSocial specification and a first iteration
+        during the GN3-JRA3-T2 project. This is just for historical reasons and
+        not all requirements of OpenSocial nor previous versions of VOOT are met.
+        One such example is that only the JSON data format is supported.
+        This specification does however aim to be backwards compatible requiring
+        little to know change to existing VOOT software.
+    </p>
+
+    <h2 id="notationalcoventions">Notational Conventions</h2>
+
+    <p>
+        The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD',
+        'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be
+        interpreted as described in [<a href="#rfc2119">RFC 2119</a>].
+    </p>
+
+    <h2 id="usecases">Usecases</h2>
+
+    <p>
+        All the use cases that are valid for accessing group membership data from an
+        organization's LDAP are also valid for VOOT. For instance, requesting
+        information about users' group memberships and the members of a group. However,
+        as opposed to LDAP, VOOT is not meant to perform user authentication.
+    </p>
+
+    <p>
+        Web applications sometimes have the ability to interface with LDAP directly to
+        access information about users in the organization's directory (and
+        authenticate users), but this is notoriously hard or even impossible to get
+        working cross-domain in a secure way, except by using RADIUS, but this is
+        not supported by web browsers, so out of scope.
+    </p>
+
+    <h2 id="provider">Provider</h2>
+
+    <p>
+        This document describes the protocol used between application (client) and
+        VOOT provider. This documents specifies the VOOT API, which is a REST API.
+        The protocol is protected using an authentication mechanism described in the
+        next section.
+    </p>
+
+    <p><img class="img-responsive" src="/assets/img/voot/vootv1-overview.png"></p>
+
+    <h2 id="authentication">Authentication</h2>
+
+    <p>
+        An application (client) has two ways to authenticate to the VOOT provider, it
+        is up to the provider to support one, or both, of those:</p>
+
+    <ul>
+        <li>Using Basic Authentication [<a href="#rfc2617">RFC 2617</a>] if the
+            VOOT provider fully trusts the client as the client will have full
+            access to all data at the provider;
+        </li>
+        <li>OAuth 2.0 [<a href="#rfc6749">RFC 6749</a>] if there is some trust
+            between the VOOT provider and the client where it is left to
+            the user to explicitly authorize the client
+            that wants to access data from the provider. The user gives the client
+            only access to their data, and not to that
+            of other users at the VOOT provider.
+        </li>
+    </ul>
+
+    <p>Technically, OAuth 2.0 is an authorization framework and not intended for
+        authentication, however, from the point of view of the VOOT provider the
+        client authenticates to the API using an access token.</p>
+
+    <h2 id="api">API</h2>
+
+    <p> The VOOT API support two calls:</p>
+    <ul>
+        <li>Retrieve a list of groups the user is a member of;</li>
+        <li>Retrieve the list of people that are member of a group the user is also a
+            member of.
+        </li>
+    </ul>
+
+    <p>
+        For the API calls one has to specify the user identifier for which the
+        information is retrieved. For API calls using OAuth 2.0 the <code>@me</code> placeholder
+        identifier MUST be supported which is replaced in the provider with the actual
+        user identifier that authorized the client to act on its behalf. With this
+        placeholder the client accessing information about the user does not need to
+        know the unique identifier of the user at the provider. Specifying an user
+        identifier MAY be supported by the OAuth 2.0 protected provider, however this
+        is not recommended.
+    </p>
+
+    <p>
+        For Basic Authentication an actual user identifier and group identifier MUST be
+        specified, <code>@me</code> is not supported here due to the lack of binding with an user
+        that authorized the client to act on its behalf. It is out of scope how the
+        client obtains the identifiers of the user, or group.
+    </p>
+
+    <p>
+        If the user <code>John</code> authorized a client to act on its behalf, with an OAuth 2.0
+        protected provider the following calls are defined, of which only the first one
+        MUST be implemented:
+    </p>
+
+{% highlight html %}
+/groups/@me
+/people/@me/students
+{% endhighlight %}
+
+    <p>
+        If information about the user <code>John</code> is queried by a client using Basic
+        Authentication the following calls are defined, of which only the first one
+        MUST be implemented:
+    </p>
+
+{% highlight html %}
+/groups/john
+/people/john/students
+{% endhighlight %}
+
+    <h2 id="oauth">OAuth</h2>
+
+    <p>
+        In order to retrieve data from the VOOT service, it is required that the client
+        specifies what type of call it wants to perform. For any of the calls a
+        different scope is required. Multiple scopes can be combined:
+    </p>
+    <ul>
+        <li>Retrieving a list of groups the user is a member of, requires the scope
+            <code>http://openvoot.org/groups</code>;
+        </li>
+        <li>Retrieving the list of people that are member of a group the user is also a
+            member of, also requires the scope <code>http://openvoot.org/people</code>.
+        </li>
+    </ul>
+    <p>
+        For backwards compatibility the scope read will give access to all the
+        above, assuming there are no other server side restrictions.
+    </p>
+
+    <h2 id="retrievemembership">Retrieve Group Membership</h2>
+
+    <p>this call retrieves a list of groups the user is a member of</p>
+
+{% highlight html %}
+/groups/@me
+{% endhighlight %}
+
+    <p>or</p>
+
+{% highlight html %}
+/groups/[userId]
+{% endhighlight %}
+
+    <p>Where <code>[userId]</code> is replaced with an idenfier of the user at the provider. This
+        call MUST be supported. The response can include the following keys:</p>
+
+    <ul>
+        <li>(REQUIRED) <code>id</code>: The, to the provider, local unique identifier of the group;</li>
+        <li>(REQUIRED) <code>voot_membership_role</code>: The role the user has in this group;</li>
+        <li>(OPTIONAL) <code>title</code>: The short human readable name of the group;</li>
+        <li>(OPTIONAL) <code>description</code>: A description of the group.</li>
+    </ul>
+
+    <p>
+        The <code>id</code> field SHOULD be opaque to the client. The field <code>voot_membership_role</code>
+        can be any of these values: admin, manager or member.
+    </p>
+
+    <h2 id="retrievemembers">Retrieve Members of a Group</h2>
+
+    <p>This call retrieves a list of all members of a group the user is a member of:</p>
+
+
+{% highlight html %}
+/people/@me/[groupId]
+{% endhighlight %}
+
+    <p>or</p>
+
+{% highlight html %}
+/people/[userId]/[groupId]
+{% endhighlight %}
+
+    <p>
+        Where <code>[userId]</code> is replaced with an identifier of the user at the provider
+        and <code>[groupId]</code> replaced with a group identifier which was obtained through for
+        instance the call used to retrieve group membership for a particular user.</p>
+
+    <p>
+        This call MAY be supported. The response can include the following keys:</p>
+
+    <ul>
+        <li>(REQUIRED) <code>id</code>: The, to the provider, local unique identifier of the user;</li>
+        <li>(OPTIONAL) <code>displayName</code>: The name by which the user prefers to be addressed;</li>
+        <li>(OPTIONAL) <code>voot_membership_role</code>: The role the user has in this group;</li>
+        <li>(OPTIONAL) <code>emails</code>: The email address(es) of the user;</li>
+    </ul>
+
+    <p>
+        The <code>id</code> field SHOULD be opaque to the client. The field <code>voot_membership_role</code>
+        can be any of these values: <code>admin</code>, <code>manager</code> or <code>member</code>. The user MUST be a
+        member, but not necessary have the role <code>member</code> of the group being queried. The
+        <code>emails</code> field SHOULD contain a list of email addresses which provides the
+        type to be any of <code>work</code>, <code>home</code> or <code>other</code>. For example:
+    </p>
+
+{% highlight json %}
+{
+	"emails": [
+		{
+			"type": "work",
+			"value": "bmcatee@students.example.edu"
+		}
+	]
+}
+{% endhighlight %}
+
+    <h2 id="requestparameters">Request Parameters</h2>
+
+    <p>The API calls have three OPTIONAL parameters that manipulate the result
+        obtained from the provider:</p>
+
+    <ul>
+        <li><code>sortBy</code></li>
+        <li><code>startIndex</code></li>
+        <li><code>count</code></li>
+    </ul>
+
+    <p>
+        The <code>sortBy</code> parameter determines the key in the result that is used for sorting
+        the groups or group members. It can be any of the mentioned keys mentioned in
+        the previous section:
+    </p>
+
+    <ul>
+        <li><code>id</code></li>
+        <li><code>displayName</code></li>
+        <li><code>title</code></li>
+        <li><code>description</code></li>
+        <li><code>voot_membership_role</code></li>
+    </ul>
+
+    <p>
+        If the key is not available in the set being sorted, the results are not sorted
+        or sorted at the provider's discretion. It is up to the provider whether or not
+        to sort and by what key in what order if these parameters are not present.
+        If the results are to be sorted, the value SHOULD be compared as strings and
+        SHOULD be sorted case-insensitive in ascending order.
+    </p>
+
+    <p>
+        The <code>startIndex</code> parameter determines the offset as an integer >= 0 at which
+        the start for giving back results. The <code>count</code> parameter, an integer >= 0
+        indicates the number of results to be given back. The <code>startIndex</code> and <code>count</code>
+        parameters can be used to implement paging by returning only a subset of the
+        results. These parameters are OPTIONAL, if they are not provided or invalid the
+        provider MUST consider <code>startIndex</code> equal to 0 and <code>count</code> equal to the total
+        number of items available in the entire set for the particular query.
+    </p>
+
+    <p>The sorting, if requested, MUST be performed on the provider before applying
+        limiting the results based on the <code>startIndex</code> and <code>count</code> parameters.
+    </p>
+
+    <p>For the API call, requesting user information, the <code>sortBy</code> parameter has no
+        effect. Using <code>startIndex</code> and <code>count</code> is possible, however they are of little
+        use as there always will be only one answer, assuming the user exists.
+    </p>
+
+    <h2 id="responseparameters">Response Parameters</h2>
+
+    <p>
+        All responses mentioned above have the same JSON structure. There are always
+        four keys:
+    </p>
+
+    <ul>
+        <li><code>startIndex</code></li>
+        <li><code>itemsPerPage</code></li>
+        <li><code>totalResults</code></li>
+        <li><code>entry</code></li>
+    </ul>
+
+    <p>
+        Where <code>startIndex</code> contains the offset from which the results are returned,
+        this is usually equals to the requested <code>startIndex</code>. The <code>itemsPerPage</code>
+        contains the actual number of results in the response set, as part of <code>entry</code>,
+        returned. The <code>totalResults</code> field contains the full number of elements
+        available, not depending on the <code>startIndex</code> and <code>count</code> parameters.
+    </p>
+
+    <p>The <code>entry</code> key contains a list of items, either groups, people or person
+        information. Below are some examples.
+    </p>
+
+    <h2 id="apiexample">API Examples</h2>
+
+    <p>Below are some API examples for retrieve group membership, a list of group
+        members and information about the user.</p>
+
+    <h4>Retrieve Group Membership</h4>
+
+    <p>
+        This is an example of the response to the query:
+    </p>
+
+{% highlight http %}
+
+GET /groups/@me?sortBy=title HTTP/1.1
+Host: provider.example.org
+
+{% endhighlight %}
+
+    <p>The response looks like this:</p>
+
+{% highlight http %}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+	"entry": [
+		{
+			"description": "Group containing employees.",
+			"id": "employees",
+			"title": "Employees",
+			"voot_membership_role": "admin"
+		},
+		{
+			"description": "Group containing everyone at this institute.",
+			"id": "members",
+			"title": "Members",
+			"voot_membership_role": "member"
+		}
+	],
+	"itemsPerPage": 2,
+	"startIndex": 0,
+	"totalResults": 2
+}
+
+{% endhighlight %}
+
+    <h4>Retrieve Members of a Groups</h4>
+
+    <p>
+        This is an example of the response to the query:
+    </p>
+
+{% highlight http %}
+
+GET /people/@me/members?sortBy=displayName&startIndex=3&count=2 HTTP/1.1
+Host: provider.example.org
+
+{% endhighlight %}
+
+    <p>The response looks like this:</p>
+
+{% highlight http %}
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+	"entry": [
+		{
+			"displayName": "Bobby Mcatee",
+			"emails": [
+				{
+					"type": "work",
+					"value": "bmcatee@students.example.edu"
+				}
+			],
+			"id": "bmcatee",
+			"voot_membership_role": "member"
+		},
+		{
+			"displayName": "Myra Wisdom",
+			"emails": [
+				{
+					"type": "home",
+					"value": "mwisdom@students.example.edu"
+				}
+			],
+			"id": "mwisdom",
+			"voot_membership_role": "member"
+		}
+	],
+	"itemsPerPage": 2,
+	"startIndex": 3,
+	"totalResults": 7
+}
+
+{% endhighlight %}
+
+    <h2 id="errorhandling">Error Handling</h2>
+
+    <p>
+        Handling failures of Authentication, either Basic or Bearer are handled in the
+        ways described in [<a href="#rfc2617">RFC 2617</a>] and [<a href="#rfc6750">RFC 6750</a>]. This will involve sending the
+        WWW-Authenticate header if something is wrong, for example an invalid
+        OAuth 2.0 access token will result in the following response:
+    </p>
+
+{% highlight http %}
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer realm="Resource Server",error="invalid_token",error_description="the access token is not valid"
+Content-Type: application/json
+
+{"error":"invalid_token","error_description":"the access token is not valid"}
+
+{% endhighlight %}
+
+    <p>
+        There are also some request errors defined, i.e.: invalid requests to the
+        provider that should be dealt with in a certain manner. Only the call that
+        retrieves group membership MUST be supported, the other calls do not need to be
+        supported. When this call is disabled a response code of <code>400 Bad Request</code> is
+        returned with <code>error</code> set to <code>invalid_request</code>.
+    </p>
+
+    <p>
+        The error response is returned as JSON, for example:
+    </p>
+
+{% highlight http %}
+
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+    "error": "invalid_user"
+}
+
+{% endhighlight %}
+
+    <p>
+        The <code>error</code> field MUST be present.
+    </p>
+
+    <h4>
+        Retrieve Group Membership
+    </h4>
+
+    <p>
+        The call looks like this:
+    </p>
+
+{% highlight html %}
+
+/groups/@me
+
+{% endhighlight %}
+
+<ul>
+    <li>If Basic Authentication is used and <code>@me</code> is used an error response with
+    code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>.
+    If a user identifier is specified instead of <code>@me</code> for providers not
+    supporting the use of user identifiers the same error is returned;</li>
+
+    <li>If the specified user does not exist at the provider an error response with
+    code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>;</li>
+
+    <li>If any other error occurs an error response with code
+    <code>500 Internal Server Error</code> is returned. The <code>error</code> field contains
+    <code>internal_server_error</code>.</li>
+</ul>
+
+    <h4>
+        Retrieve Members of a Group
+    </h4>
+
+    <p>
+        The call looks like this:
+    </p>
+
+{% highlight html %}
+
+/groups/@me/members
+
+{% endhighlight %}
+
+
+    <ul>
+        <li>If Basic Authentication is used and <code>@me</code> is used an error response with
+            code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>.
+            If a user identifier is specified instead of <code>@me</code> for providers not
+            supporting the use of user identifiers the same error is returned;</li>
+
+        <li>If the specified user does not exist at the provider an error response with
+            code <code>404 Not Found</code> is returned. The <code>error</code> field contains <code>invalid_user</code>;</li>
+
+        <li>
+            If the specified user is not a member of the group an error response with
+            code <code>403 Forbidden</code> is returned. The <code>error</code> field contains <code>not_a_member</code>.
+            This response MUST be returned when the user is not a member, no matter
+            whether the group actually exists or not;</li>
+
+        <li>If any other error occurs an error response with code
+            <code>500 Internal Server Error</code> is returned. The <code>error</code> field contains
+            <code>internal_server_error</code>.</li>
+    </ul>
+
+    <h2 id="proxyoperations">Proxy Operation</h2>
+
+    <p>
+        One of the use cases is to make it possible to combine data from various
+        group providers using one API service. This way group membership information
+        can be aggregated from various sources. The proxy provides an OAuth 2.0
+        protected API to clients and in the backend uses Basic Authentication to talk
+        to the group providers from which it needs to aggregate data.
+    </p>
+
+    <p><img class="img-responsive" src="/assets/img/voot/vootv1-proxy.png"></p>
+
+    <p>
+        From the client's point of view there should be no difference in the API
+        compared to talking directly to a group provider. There are however some
+        special error cases that should be considered. For instance if (one of) the
+        remote group providers is not available. Also the group identifiers that were
+        scoped locally per group provider need to be modified to include a 'scope',
+        i.e. to indicate to what group provider they belong.
+    </p>
+
+    <p>
+        For example the user <code>John</code>, which is a local identifier at a group provider
+        can occur in multiple group providers, so it needs to be matched to this
+        particular group provider, for example prefixed with the identifier of the
+        group provider. The prefixed value SHOULD be opaque to the client as well.
+    </p>
+
+    <h2 id="idfedconsiderations">Identity Federation Considerations</h2>
+
+    <p> The VOOT protocol is not meant to authenticate users at a service. For this,
+        other mechanisms such as federated identity protocols like SAML, OpenID Connect
+        or Mozilla Persona exists. What needs to be considered here is making sure the
+        identifiers used in the authentication layer are the same as used by the group
+        provider when exposing this information to clients.
+    </p>
+
+    <p>In SAML for instance there is the persistent opaque identifier provided to
+        Service Provider (SP) through the NameID value. This is an identifier that
+        remains constant for a particular user per SP. This way, SPs cannot match the
+        same user between themselves based on this identifier alone.
+    </p>
+
+    <p>This only needs to be considered when implementing the call that retrieves
+        group members. For just retrieving the group identifiers there can be any
+        mechanism to make the values opaque as this information is typically not
+        provided through the SAML assertion. </p>
+
+    <h2 id="roles">Roles</h2>
+
+    <p>
+        The roles <code>admin</code>, <code>manager</code> and <code>member</code> are not well defined. Their actual
+        semantics is based on what the application considers to be an <code>admin</code>, <code>manager</code>
+        or <code>member</code>. However, in general, the following can be said about the roles:
+    </p>
+
+    <ul>
+        <li>
+            A user with role <code>admin</code> has more rights than a user with role <code>manager</code> or
+            role <code>member</code>;
+        </li>
+        <li>
+            A user with role <code>manager</code> has more rights than a user with role <code>member</code>;
+        </li>
+    </ul>
+
+    <p>
+        For more fine grained roles the use of an entitlement based system is
+        recommended, which is out of scope of this specification.
+    </p>
+
+    <h2 id="privacy">Privacy</h2>
+
+    <p>
+        In order to maintain user privacy only the group membership API call should be
+        allowed by third party clients. The other calls are not needed to determine
+        group membership, e.g. to base application authorization on. If a user is a
+        member of a particular group certain privileges may be granted based on just
+        this fact.
+    </p>
+
+    <p>
+        Only the <code>@me</code> user identifier should be allowed as to avoid needing to obtain
+        unique user identifiers.
+    </p>
+
+    <p>
+        If one makes use of the proxy scenario where the proxy provider is trusted,
+        Basic Authentication can be used with for instance the local <code>uid</code> of the user.
+        The proxy then SHOULD take care of making this information opaque towards the
+        client and generate new identifiers for the same user for different clients.
+    </p>
+
+    <p>
+        The calls to retrieve group members are unacceptable from the point of view of
+        user privacy. Even if OAuth 2.0 is used this would leak user identifiers of
+        other people to clients without the users that are a member of this group ever
+        gave permissions for that. The impact of this can be minimized by making sure
+        only the unique, opaque user identifier of the user is mentioned in the result
+        and not other identifying information such as <code>displayName</code>. However, without
+        these additional attributes this API call will be less useful.
+    </p>
+
+    <h2 id="references">References</h2>
+
+    <ul>
+        <li id="rfc2119"><a href="https://tools.ietf.org/html/rfc2119">RFC 2119</a> Key words for use in RFCs to
+            Indicate Requirement Levels
+        </li>
+        <li id="rfc2617"><a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a> HTTP Authentication: Basic and
+            Digest Access Authentication
+        </li>
+        <li id="rfc6749"><a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a> The OAuth 2.0 Authorization
+            Framework
+        </li>
+        <li id="rfc6750"><a href="https://tools.ietf.org/html/rfc6750">RFC 6750</a> The OAuth 2.0 Authorization
+            Framework: Bearer Token Usage
+        </li>
+    </ul>
+
+    <h2 id="contributors">Contributors</h2>
+    <ul>
+        <li>Leif Johansson, SUNET</li>
+        <li>Maarten Kremers, SURFnet</li>
+    </ul>
+
+    <h2 id="authors">Authors / Editors</h2>
+    <ul>
+        <li>Andreas Åkre Solberg, UNINETT </li>
+        <li>François Kooman, SURFnet</li>
+    </ul>
 
 </div>
